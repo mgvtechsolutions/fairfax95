@@ -18,17 +18,7 @@
   {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 
-<style>
-  .header-wrapper{
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: transparent;
-    border: none;
-    z-index: 999; 
-  }
-  
+<style>     
   header-drawer {
     justify-self: start;
     margin-left: -1.2rem;
@@ -89,6 +79,96 @@
 </style>
 
 {%- style -%}
+   {% unless settings.logo %}
+.header__heading-link .h2{
+  display: block !important;
+}
+
+  .header__heading-link .header__heading-logo-wrapper{
+    display: none;
+  }
+    {% endunless %}
+  
+{% if section.settings.enable_transparent-header and section.settings.color-transparent  %}
+.header-wrapper{
+    background: transparent;
+    position: absolute;
+    width: 100%;
+    top: 0px;
+  }
+  .header-wrapper:hover{
+    background-color: white !important;
+  }
+  .header-wrapper:hover .header__icon.link, .header-wrapper:hover .header__active-menu-item, .header-wrapper:hover .list-menu__item, .header-wrapper:hover details[open]>.header__submenu, .header-wrapper:hover .disclosure__button, .header-wrapper:hover .header__heading-link .h2{
+    color: black !important;
+  }
+  .scrolled-past-header sticky-header{
+background: var(--gradient-background) !important;
+    /* color: rgba(var(--color-foreground), 0.75); */
+}
+  /* .scrolled-past-header sticky-header .header__icon.link,.scrolled-past-header sticky-header .header__active-menu-item,.scrolled-past-header sticky-header .disclosure__button,.header__heading-link .h2{
+  color: rgba(var(--color-foreground), 0.75) !important;
+    } */
+  .scrolled-past-header sticky-header .header__heading-link{
+    display: block !important;
+  }
+  .scrolled-past-header sticky-header .logo-transparent{
+    display: none !Important;
+  }
+  .header__heading-link{
+    display: none;
+  }
+
+  .logo-transparent{
+    display: block;
+  } 
+
+@media only screen and (min-width: 600px) {
+    .list-menu__item, details[open]>.header__submenu {
+   color: {{section.settings.color-transparent}} !important;
+      background: transparent;
+    }
+  .header__icon.link,.header__active-menu-item,.disclosure__button,.header__heading-link .h2{
+   color: {{section.settings.color-transparent}} !important;
+    }
+  .scrolled-past-header sticky-header .list-menu__item, details[open]>.header__submenu
+  {
+  color: rgba(var(--color-foreground), 0.75) !important;  
+  }
+  .scrolled-past-header sticky-header .header__icon.link,.scrolled-past-header sticky-header .header__active-menu-item,.scrolled-past-header sticky-header .disclosure__button,.header__heading-link .h2{
+  color: rgba(var(--color-foreground), 0.75) !important;
+    }
+{% endif %}
+
+  
+{% if section.settings.enable_transparent-header and section.settings.only-homepage and template != 'index' %}
+  .header-wrapper{
+    position: relative;
+    background: var(--gradient-background);
+  }
+  .header__icon.link,.header__active-menu-item,.disclosure__button,.header__heading-link .h2{
+   color: rgba(var(--color-foreground), 0.75);
+    }
+  {% endif %}
+
+  
+  {% if section.settings.color-transparent and section.settings.only-homepage and section.settings.enable_transparent-header and template != 'index' %}
+@media only screen and (min-width: 600px) {
+    .list-menu__item, details[open]>.header__submenu {
+   color: rgba(var(--color-foreground), 0.75) !important;
+      background: transparent;
+    }
+}
+  .header__icon.link,.header__active-menu-item,.disclosure__button,.header__heading-link .h2{
+  color: rgba(var(--color-foreground), 0.75) !important;
+    }
+    .header__heading-link{
+      display: block;
+    }
+    .logo-transparent{
+      display: none;
+    }
+    {% endif %}
   .header {
     padding: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px 3rem {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px 3rem;
   }
@@ -193,6 +273,29 @@
               <span class="h2">{{ shop.name }}</span>
             {%- endif -%}
           </a>
+          {% if section.settings.enable_transparent-header %}
+          <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset logo-transparent">
+            {%- if settings.logo-transparent != blank -%}
+              <div class="header__heading-logo-wrapper">
+                {%- assign logo_alt = settings.logo-transparent.alt | default: shop.name | escape -%}
+                {%- assign logo_height = settings.logo_width | divided_by: settings.logo-transparent.aspect_ratio -%}
+                {% capture sizes %}(max-width: {{ settings.logo_width | times: 2 }}px) 50vw, {{ settings.logo_width }}px{% endcapture %}
+                {% capture widths %}{{ settings.logo_width }}, {{ settings.logo_width | times: 1.5 | round }}, {{ settings.logo_width | times: 2 }}{% endcapture %}
+                {{ settings.logo-transparent | image_url: width: 600 | image_tag:
+                  class: 'header__heading-logo motion-reduce',
+                  widths: widths,
+                  height: logo_height,
+                  width: settings.logo_width,
+                  alt: logo_alt,
+                  sizes: sizes,
+                  preload: true
+                }}
+              </div>
+               {%- else -%}
+              <span class="h2">{{ shop.name }}</span>
+            {%- endif -%}
+          </a>
+          {% endif %}
       {%- if request.page_type == 'index' -%}
         </h1>
       {%- endif -%}
@@ -488,17 +591,34 @@
     });
 </script>
 {% endif section.settings.hover %}
-  
+ <!-- Menu Hover  --> 
 {% schema %}  
   {
   "name": "t:sections.header.name",
   "class": "section-header",
   "max_blocks": 3,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_transparent-header",
+      "label": "Enable Transparent Header",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "color-transparent",
+      "label": "Transparent Color"
+    },
+     {
+      "type": "checkbox",
+      "id": "only-homepage",
+      "default": true,
+      "label": "Enable only on Homepage"
+    },
     { 
-    "type": "checkbox",
-    "id": "hover",
-    "label":"t:sections.header.settings.hover.label" 
+      "type": "checkbox",
+      "id": "hover",
+      "label":"t:sections.header.settings.hover.label" 
     },
     {
       "type": "select",
