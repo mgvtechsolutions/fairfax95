@@ -64,7 +64,7 @@
   column-gap: 0;
 }
 
-.header--top-center .mega-menu__list > li {
+.header--top-center .mega-menu__list>li {
   width: 16%;
   padding-right: 2.4rem;
 }
@@ -85,4 +85,20 @@
 
 .mega-menu__list--condensed .mega-menu__link {
   font-weight: normal;
+}
+
+/* Ocultar el contador de productos por defecto */
+.products-count-wrapper {
+  display: none;
+}
+
+/* Mostrar el contador de productos al hacer hover sobre el enlace */
+.mega-menu__link:hover .products-count-wrapper {
+  display: inline;
+}
+
+/* Estilizar el contador de productos como exponente */
+.products-count {
+  font-size: 0.6em;
+  vertical-align: super;
 }

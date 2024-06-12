@@ -56,6 +56,18 @@
                                     {% endif %}
                                   >
                                     {{ childlink.title | escape }}
+                                    {% assign product_count = '' %}
+                                    {%- for collection in collections -%}
+                                      {%- if childlink.url == collection.url -%}
+                                        {% assign product_count = collection.products_count | escape %}
+                                        {% break %}
+                                      {%- endif -%}
+                                    {%- endfor -%}
+                                    <span class="products-count-wrapper-m">
+                                      <sup class="products-count-m">
+                                        {{ product_count }}
+                                      </sup>
+                                    </span>
                                   </a>
                                 {%- else -%}
                                   <details id="Details-menu-drawer-{{ link.handle }}-{{ childlink.handle }}">
@@ -94,6 +106,18 @@
                                               {% endif %}
                                             >
                                               {{ grandchildlink.title | escape }}
+                                              {% assign product_count = '' %}
+                                              {%- for collection in collections -%}
+                                                {%- if grandchildlink.url == collection.url -%}
+                                                  {% assign product_count = collection.products_count | escape %}
+                                                  {% break %}
+                                                {%- endif -%}
+                                              {%- endfor -%}
+                                              <span class="products-count-wrapper-m">
+                                                <sup class="products-count-m">
+                                                  {{ product_count }}
+                                                </sup>
+                                              </span>
                                             </a>
                                           </li>
                                         {%- endfor -%}
