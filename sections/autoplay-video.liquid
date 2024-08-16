@@ -52,12 +52,12 @@
 
 {% if section.settings.fullwidth %}
   <style>
-    /* Your full-height styles go here */
+    /* Your full-height styles go here */   
     .video-container {
       position: relative;
       width: 100%;
       padding-bottom: 46.25%; /* Adjust this value as needed for the aspect ratio */
-      height: 0;
+      height: 100vh;
       overflow: hidden;
     }
     .video-container iframe,
@@ -67,6 +67,13 @@
       left: 0;
       width: 100%;
       height: auto;
+    }
+    
+     @media only screen and (max-width: 480px) {
+     .video-container video{
+          height: 300px !important;
+      }
+
     }
   </style>
 {% endif %}
