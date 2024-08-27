@@ -164,7 +164,29 @@
               <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
               <div class="caption-with-letter-spacing light">{{ card_product.vendor }}</div>
             {%- endif -%}
+            
+            {% comment %} show number of variantes MGZ{% endcomment %}
+            {% assign prod_variant_count = 0 %}
+            {% assign variant_option = '' %}
 
+            {%- if card_product.variants.size > 1 -%}
+            {% for option in card_product.options %}
+                {% if option contains 'Color' %}
+                  {% for variant in card_product.variants %}
+                    {% if variant_option != variant.option1 %} 
+                      {% assign prod_variant_count = prod_variant_count | plus: 1 %}
+                      {% assign variant_option = variant.option1 %}                       
+                    {% endif %}                  	
+                  {% endfor %}
+                {% endif %}
+            {% endfor %}
+            {%- if prod_variant_count > 1 -%}
+              <div class="caption-with-letter-spacing light">{{ prod_variant_count }} Colores disponibles</div>
+            {%- endif -%}  
+            {%- endif -%}           
+
+            {% comment %} finish number of variants MGZ{% endcomment %}
+            
             <span class="caption-large light">{{ block.settings.description | escape }}</span>
 
             {%- if show_rating and card_product.metafields.reviews.rating.value != blank -%}

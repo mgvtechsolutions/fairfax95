@@ -56,13 +56,18 @@
                                     {% endif %}
                                   >
                                     {{ childlink.title | escape }}
+                                    {% assign all_collection = collections['all'] %}
                                     {% assign product_count = '' %}
-                                    {%- for collection in collections -%}
-                                      {%- if childlink.url == collection.url -%}
-                                        {% assign product_count = collection.products_count | escape %}
-                                        {% break %}
-                                      {%- endif -%}
-                                    {%- endfor -%}
+                                    {%- if childlink.url == '/collections/all' -%}
+                                      {% assign product_count = all_collection.products_count %}
+                                    {%- else -%}
+                                      {%- for collection in collections -%}
+                                        {%- if childlink.url == collection.url -%}
+                                          {% assign product_count = collection.products_count | escape %}
+                                          {% break %}
+                                        {%- endif -%}
+                                      {%- endfor -%}
+                                    {%- endif -%}                                   
                                     <span class="products-count-wrapper-m">
                                       <sup class="products-count-m">
                                         {{ product_count }}
@@ -106,13 +111,18 @@
                                               {% endif %}
                                             >
                                               {{ grandchildlink.title | escape }}
+                                              {% assign all_collection = collections['all'] %}
                                               {% assign product_count = '' %}
-                                              {%- for collection in collections -%}
-                                                {%- if grandchildlink.url == collection.url -%}
-                                                  {% assign product_count = collection.products_count | escape %}
-                                                  {% break %}
-                                                {%- endif -%}
-                                              {%- endfor -%}
+                                              {%- if grandchildlink.url == '/collections/all' -%}
+                                                {% assign product_count = all_collection.products_count %}
+                                              {%- else -%}
+                                                {%- for collection in collections -%}
+                                                  {%- if grandchildlink.url == collection.url -%}
+                                                    {% assign product_count = collection.products_count | escape %}
+                                                    {% break %}
+                                                  {%- endif -%}
+                                                {%- endfor -%}
+                                              {%- endif -%}
                                               <span class="products-count-wrapper-m">
                                                 <sup class="products-count-m">
                                                   {{ product_count }}
